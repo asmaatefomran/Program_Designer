@@ -1,0 +1,10 @@
+﻿# JetBrains Rider
+.idea/
+
+# Build output
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
