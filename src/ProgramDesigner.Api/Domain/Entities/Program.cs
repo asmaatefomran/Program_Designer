@@ -2,7 +2,7 @@
 
 public class Program
 {
-    public Guid Id { get; init; } = Guid.NewGuid();
+    public required string Id { get; init; }
 
     public required string Name { get; init; }
 

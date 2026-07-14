@@ -2,9 +2,9 @@
 
 public abstract class Node
 {
-    public Guid Id { get; init; } = Guid.NewGuid();
+    public required string Id { get; init; }
 
     public required string Name { get; init; }
 
-    public List<Guid> PrerequisiteIds { get; init; } = [];
+    public List<string> PrerequisiteIds { get; init; } = [];
 }
