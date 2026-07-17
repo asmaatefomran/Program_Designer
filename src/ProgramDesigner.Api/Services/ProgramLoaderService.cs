@@ -54,15 +54,16 @@ public class ProgramLoaderService : IProgramLoaderService
     
     private async Task<Node> LoadNodeAsync(string nodeId)
     {
-        var node = await _context.Nodes
-            .FirstAsync(n => n.Id == nodeId);
+        var isGroup = await _context.Groups.AnyAsync(g => g.Id == nodeId);
+
+        Node node = isGroup
+            ? await _context.Groups.Include(g => g.Children).FirstAsync(g => g.Id == nodeId)
+            : await _context.Nodes.FirstAsync(n => n.Id == nodeId);
 
         await LoadPrerequisites(node);
 
         if (node is Group group)
-        {
             await LoadChildren(group);
-        }
 
         return node;
     }
