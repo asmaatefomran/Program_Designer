@@ -7,14 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Reference Include="Microsoft.EntityFrameworkCore"><HintPath>bin/Debug/net8.0/Microsoft.EntityFrameworkCore.dll</HintPath></Reference>
-        <Reference Include="Microsoft.EntityFrameworkCore.Abstractions"><HintPath>bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath></Reference>
-        <Reference Include="Microsoft.EntityFrameworkCore.Relational"><HintPath>bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.dll</HintPath></Reference>
-        <Reference Include="Npgsql"><HintPath>bin/Debug/net8.0/Npgsql.dll</HintPath></Reference>
-        <Reference Include="Npgsql.EntityFrameworkCore.PostgreSQL"><HintPath>bin/Debug/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll</HintPath></Reference>
-        <Reference Include="Swashbuckle.AspNetCore.Swagger"><HintPath>bin/Debug/net8.0/Swashbuckle.AspNetCore.Swagger.dll</HintPath></Reference>
-        <Reference Include="Swashbuckle.AspNetCore.SwaggerGen"><HintPath>bin/Debug/net8.0/Swashbuckle.AspNetCore.SwaggerGen.dll</HintPath></Reference>
-        <Reference Include="Swashbuckle.AspNetCore.SwaggerUI"><HintPath>bin/Debug/net8.0/Swashbuckle.AspNetCore.SwaggerUI.dll</HintPath></Reference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.18" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.18" />
+
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.18">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     </ItemGroup>
 
 </Project>
