@@ -1,0 +1,17 @@
+﻿**/bin
+**/obj
+**/.vs
+**/.vscode
+
+.git
+.gitignore
+
+README.md
+
+Dockerfile
+
+node_modules
+
+coverage
+
+TestResults
