@@ -15,6 +15,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Group> Groups => Set<Group>();
     public DbSet<Step> Steps => Set<Step>();
     public DbSet<NodePrerequisite> NodePrerequisites => Set<NodePrerequisite>();
+    public DbSet<MissingPrerequisiteRecord> MissingPrerequisites => Set<MissingPrerequisiteRecord>();
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
