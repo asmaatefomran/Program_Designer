@@ -34,6 +34,17 @@ public class ProgramService : IProgramService
         var validation = _validator.Validate(buildResult);
 
         _context.Programs.Add(buildResult.Program);
+        
+        foreach(var unresolved in buildResult.UnresolvedPrerequisites)
+        {
+            _context.MissingPrerequisites.Add(new MissingPrerequisiteRecord
+            {
+                Id = Guid.NewGuid().ToString(),
+                ProgramId = buildResult.Program.Id,
+                NodeId = unresolved.Node.Id,
+                MissingPrerequisiteTemplateId =  unresolved.MissingPrerequisiteTemplateId
+            });
+        }
         await _context.SaveChangesAsync();
 
         return new CreateProgramResponse
@@ -54,10 +65,44 @@ public class ProgramService : IProgramService
         var program = await _loader.LoadProgramAsync(id);
         if (program is null)
             return null;
+        
+        var missingRecords = await  _context.MissingPrerequisites
+            .Where(m => m.ProgramId == id)
+            .ToListAsync();
+
+        var nodesById = FlattenNodes(program.RootGroup).ToDictionary(n => n.Id);
+        
+        var unresolvedPrerequisites = missingRecords
+            .Where(m => nodesById.ContainsKey(m.NodeId))
+            .Select(m => new UnresolvedPrerequisite
+            {
+                Node = nodesById[m.NodeId],
+                MissingPrerequisiteTemplateId =  m.MissingPrerequisiteTemplateId
+            })
+            .ToList();
 
         return _validator.Validate(new BuildResult
         {
-            Program = program
+            Program = program,
+            UnresolvedPrerequisites = unresolvedPrerequisites
         });
+    }
+
+    public static IEnumerable<Node> FlattenNodes(Node node)
+    {
+        yield return node;
+
+        if (node is Group group)
+        {
+            foreach (var child in  group.Children)
+            {
+                foreach (var descendant in FlattenNodes(child))
+                {
+                    yield return descendant;
+                }
+                
+            }
+          
+        }
     }
 }

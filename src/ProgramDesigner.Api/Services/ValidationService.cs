@@ -84,29 +84,26 @@ public class ValidationService : IValidationService
     }
 //------------------------------------------------------------------------------------------------------------
 
+    // Note: unresolved prerequisites are never added to Node.Prerequisites in
+    // the first place (there's nothing to link to), so they can't be found
+    // by scanning the tree -- BuildResult.UnresolvedPrerequisites is the only
+    // place this information exists. At creation time it comes straight from
+    // ProgramBuilderService; at /validate time (a separate call, against an
+    // already-persisted program) it comes from MissingPrerequisiteRecord rows
+    // reloaded from the database -- see ProgramService.ValidateAsync.
     private static void ValidateMissingPrerequisiteTemplates(
         BuildResult buildResult,
         List<ValidationIssueResponse> errors)
     {
-        var templates = GetAllNodes(buildResult.Program.RootGroup)
-            .Select(n => n.TemplateId)
-            .ToHashSet();
-
-        foreach (var node in GetAllNodes(buildResult.Program.RootGroup))
+        foreach (var unresolved in buildResult.UnresolvedPrerequisites)
         {
-            foreach (var prerequisite in node.Prerequisites)
+            errors.Add(new ValidationIssueResponse
             {
-                if (!templates.Contains(prerequisite.PrerequisiteTemplateId))
-                {
-                    errors.Add(new ValidationIssueResponse
-                    {
-                        Code = "MISSING_PREREQUISITE",
-                        NodeId = node.Id,
-                        Message =
-                            $"Prerequisite template '{prerequisite.PrerequisiteTemplateId}' does not exist."
-                    });
-                }
-            }
+                Code = "MISSING_PREREQUISITE",
+                NodeId = unresolved.Node.Id,
+                Message =
+                    $"Prerequisite template '{unresolved.MissingPrerequisiteTemplateId}' does not exist."
+            });
         }
     }
 //---------------------------------------------------------------------------------------------------
@@ -279,8 +276,42 @@ public class ValidationService : IValidationService
                             "A prerequisite appears after the node that depends on it."
                     });
                 }
+
+                // Mirror case the traversal-order check above can't catch: a
+                // prerequisite pointing at one of its own ancestors. An ancestor
+                // always has an EARLIER traversal position than its descendant,
+                // so it never trips the forward-reference check -- but it's
+                // exactly as circular: the ancestor group can't be considered
+                // complete until this node finishes (or, for a Choice ancestor,
+                // until this branch is chosen), so this node can't also be
+                // waiting on that same ancestor.
+                if (IsAncestorOf(node, prerequisite.PrerequisiteId))
+                {
+                    errors.Add(new ValidationIssueResponse
+                    {
+                        Code = "PREREQUISITE_ON_ANCESTOR",
+                        NodeId = node.Id,
+                        Message =
+                            "A prerequisite points at a group that contains it, which is circular."
+                    });
+                }
             }
         }
+    }
+
+    private static bool IsAncestorOf(Node node, string possibleAncestorId)
+    {
+        var current = node.ParentGroup;
+
+        while (current != null)
+        {
+            if (current.Id == possibleAncestorId)
+                return true;
+
+            current = current.ParentGroup;
+        }
+
+        return false;
     }
 
 //-------------------------------------------------------------------------------------------------------------------------

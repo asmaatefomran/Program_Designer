@@ -38,7 +38,8 @@ public class ProgramBuilderService : IProgramBuilderService
                 Name = request.Name,
                 RootGroup = root,
                 RootGroupId = root.Id
-            }
+            },
+            UnresolvedPrerequisites = _unresolvedPrerequisites.ToList()
         };
         
     }
