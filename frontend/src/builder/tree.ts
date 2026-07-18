@@ -188,17 +188,10 @@ export function validateTemplateIds(
     root: BuilderNode,
 ): TemplateIdValidation {
   const errors: string[] = [];
-  const seen = new Set<string>();
 
   function visit(node: BuilderNode) {
-    const id = node.templateId.trim();
-
-    if (!id) {
+    if (!node.templateId.trim()) {
       errors.push(`"${node.name}" is missing a Template ID.`);
-    } else if (seen.has(id)) {
-      errors.push(`Duplicate Template ID: "${id}".`);
-    } else {
-      seen.add(id);
     }
 
     if (node.kind === "group") {
