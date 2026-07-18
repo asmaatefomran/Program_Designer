@@ -2,7 +2,11 @@ import axios from "axios";
 import type {
   CreateProgramRequest,
   CreateProgramResponse,
+  PagedResult,
   ProgramResponse,
+  ProgramSummaryResponse,
+  SimulateRequest,
+  SimulateResponse,
   ValidationResponse,
 } from "./types";
 
@@ -28,6 +32,28 @@ export async function getProgram(id: string): Promise<ProgramResponse> {
 export async function validateProgram(id: string): Promise<ValidationResponse> {
   const { data } = await apiClient.post<ValidationResponse>(
     `/programs/${id}/validate`,
+  );
+  return data;
+}
+
+export async function getPrograms(
+  page: number,
+  pageSize: number,
+): Promise<PagedResult<ProgramSummaryResponse>> {
+  const { data } = await apiClient.get<PagedResult<ProgramSummaryResponse>>(
+    "/programs",
+    { params: { page, pageSize } },
+  );
+  return data;
+}
+
+export async function simulateProgram(
+  id: string,
+  request: SimulateRequest,
+): Promise<SimulateResponse> {
+  const { data } = await apiClient.post<SimulateResponse>(
+    `/programs/${id}/simulate`,
+    request,
   );
   return data;
 }
