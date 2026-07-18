@@ -60,14 +60,15 @@ That's it. Give it a minute the first time (it builds the API, the frontend, and
 
 Database migrations are applied automatically on startup,  there is nothing extra to run.
 
+You should see all the Green words at the end, now the frontend + backend + database are running correctly.
+<img width="1380" height="552" alt="image" src="https://github.com/user-attachments/assets/dcc880ce-669e-4cb8-b2d6-42567946fd70" />
+
+
 To stop everything:
 
 ```bash
 docker compose down        # add -v to also wipe the postgres volume
 ```
-You should see all the Green words at the end, now the frontend + backend + database are running correctly.
-<img width="1380" height="552" alt="image" src="https://github.com/user-attachments/assets/dcc880ce-669e-4cb8-b2d6-42567946fd70" />
-
 
 
 
