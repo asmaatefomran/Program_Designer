@@ -8,12 +8,6 @@ using Xunit;
 
 namespace ProgramDesigner.Tests.Integration;
 
-/// <summary>
-/// These tests use a real ApplicationDbContext against EF Core's InMemory
-/// provider rather than mocking IProgramService's dependencies -- the whole
-/// point of most of these cases is to prove something survives an actual
-/// save-then-reload round trip, which a mock can't demonstrate.
-/// </summary>
 public class ProgramServiceTests : IDisposable
 {
     private readonly DbContextOptions<ApplicationDbContext> _options;
@@ -32,7 +26,8 @@ public class ProgramServiceTests : IDisposable
             _context,
             new ProgramBuilderService(),
             new ValidationService(),
-            new ProgramLoaderService(_context));
+            new ProgramLoaderService(_context),
+            new SimulationService());
     }
 
     public void Dispose() => _context.Dispose();
@@ -48,7 +43,8 @@ public class ProgramServiceTests : IDisposable
             freshContext,
             new ProgramBuilderService(),
             new ValidationService(),
-            new ProgramLoaderService(freshContext));
+            new ProgramLoaderService(freshContext),
+            new SimulationService());
     }
 
     [Fact]
@@ -66,9 +62,7 @@ public class ProgramServiceTests : IDisposable
     [Fact]
     public async Task CreateThenGet_PreservesSiblingOrderAfterReload()
     {
-        // The specific bug an unordered EF collection would reintroduce:
-        // without persisting an explicit order, a reload could come back in
-        // any order and silently break the forward-prerequisite check.
+        
         var created = await _service.CreateAsync(ComputerScienceScenario.Build());
 
         var fetched = await CreateFreshService().GetAsync(created.Program.Id);
