@@ -43,7 +43,7 @@ Requirements: **Docker** and **Docker Compose** (that's it - no local .NET or No
 git clone https://github.com/asmaatefomran/Program_Designer.git
 cd Program_Designer
 
-# 2. Make sure Docker Engine is running (start it if it's stoped)
+# 2. Make sure Docker Engine is running (start it if it isn't running)
 
 # 3. Start everything: Postgres + API + frontend
 docker compose up --build
