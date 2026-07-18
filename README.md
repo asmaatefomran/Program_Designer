@@ -8,7 +8,7 @@ A learning program is a recursive tree of **groups** (containers with an `All`/`
 
 ## Demo Video
 
-📹 *Video walkthrough will be linked here:* **[Add Google Drive link before submitting]**
+📹 *Video walkthrough will be linked here:* **[[https://drive.google.com/drive/folders/1leq-KYHSimv00aIdqAuLFH0qhDLJfYIC?usp=sharing](https://drive.google.com/drive/folders/1leq-KYHSimv00aIdqAuLFH0qhDLJfYIC?usp=sharing)]**
 
 ---
 
