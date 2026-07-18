@@ -9,6 +9,7 @@ import {
   removeNode,
   toGroupRequest,
   updateNode,
+  validateTemplateIds,
   type BuilderGroup,
   type BuilderNode,
 } from "@/builder/tree";
@@ -78,12 +79,28 @@ export function CreatePage() {
     setLastResult(null);
   }
 
+  function validateBeforeSubmit(): boolean {
+    const validation = validateTemplateIds(root);
+    if (!validation.valid) {
+      alert(validation.errors.join("\n"));
+      return false;
+    }
+    return true;
+  }
+
   async function handleCreateOnly() {
-    await createMutation.mutateAsync({ name: programName, rootGroup: toGroupRequest(root) });
+    if (!validateBeforeSubmit()) return;
+
+    await createMutation.mutateAsync({
+      name: programName,
+      rootGroup: toGroupRequest(root),
+    });
     navigate("/programs");
   }
 
   async function handleCreateAndValidate() {
+    if (!validateBeforeSubmit()) return;
+
     const result = await createMutation.mutateAsync({
       name: programName,
       rootGroup: toGroupRequest(root),

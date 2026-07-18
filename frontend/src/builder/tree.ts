@@ -33,17 +33,12 @@ function nextKey(): string {
   return `node-${keyCounter}-${Date.now().toString(36)}`;
 }
 
-let templateCounter = 0;
-function nextTemplateId(prefix: string): string {
-  templateCounter += 1;
-  return `${prefix}-${templateCounter}`;
-}
 
 export function createStep(name = "New step"): BuilderStep {
   return {
     kind: "step",
     key: nextKey(),
-    templateId: nextTemplateId("step"),
+    templateId: "",
     name,
     prerequisiteTemplateIds: [],
   };
@@ -53,7 +48,7 @@ export function createGroup(name = "New group"): BuilderGroup {
   return {
     kind: "group",
     key: nextKey(),
-    templateId: nextTemplateId("group"),
+    templateId: "",
     name,
     groupType: "All",
     requiredChoiceCount: 0,
@@ -181,5 +176,40 @@ export function responseToBuilderNode(node: NodeResponse): BuilderNode {
     requiredChoiceCount: node.requiredSelections ?? 0,
     prerequisiteTemplateIds: node.prerequisiteTemplateIds,
     children: node.children.map(responseToBuilderNode),
+  };
+}
+
+export interface TemplateIdValidation {
+  valid: boolean;
+  errors: string[];
+}
+
+export function validateTemplateIds(
+    root: BuilderNode,
+): TemplateIdValidation {
+  const errors: string[] = [];
+  const seen = new Set<string>();
+
+  function visit(node: BuilderNode) {
+    const id = node.templateId.trim();
+
+    if (!id) {
+      errors.push(`"${node.name}" is missing a Template ID.`);
+    } else if (seen.has(id)) {
+      errors.push(`Duplicate Template ID: "${id}".`);
+    } else {
+      seen.add(id);
+    }
+
+    if (node.kind === "group") {
+      node.children.forEach(visit);
+    }
+  }
+
+  visit(root);
+
+  return {
+    valid: errors.length === 0,
+    errors,
   };
 }

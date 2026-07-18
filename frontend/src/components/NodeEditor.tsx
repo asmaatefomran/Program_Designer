@@ -69,9 +69,16 @@ export function NodeEditor({
         )}
 
         <Input
-          value={node.name}
-          onChange={(e) => onUpdate(node.key, { name: e.target.value })}
-          className="w-48"
+            value={node.name}
+            onChange={(e) => onUpdate(node.key, { name: e.target.value })}
+            className="w-48"
+        />
+
+        <Input
+            value={node.templateId}
+            onChange={(e) => onUpdate(node.key, { templateId: e.target.value })}
+            placeholder="Template ID"
+            className="w-40"
         />
 
         <Badge variant={node.kind === "group" ? "default" : "outline"}>
