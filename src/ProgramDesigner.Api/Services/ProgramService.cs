@@ -15,17 +15,20 @@ public class ProgramService : IProgramService
     private readonly IProgramBuilderService _builder;
     private readonly IValidationService _validator;
     private readonly IProgramLoaderService _loader;
+    private readonly ISimulationService _simulator;
 
     public ProgramService(
         ApplicationDbContext context,
         IProgramBuilderService builder,
         IValidationService validator,
-        IProgramLoaderService loader)
+        IProgramLoaderService loader,
+        ISimulationService simulator)
     {
         _context = context;
         _builder = builder;
         _validator = validator;
         _loader = loader;
+        _simulator = simulator;
     }
 
     public async Task<CreateProgramResponse> CreateAsync(CreateProgramRequest request)
@@ -34,7 +37,7 @@ public class ProgramService : IProgramService
         var validation = _validator.Validate(buildResult);
 
         _context.Programs.Add(buildResult.Program);
-        
+
         foreach(var unresolved in buildResult.UnresolvedPrerequisites)
         {
             _context.MissingPrerequisites.Add(new MissingPrerequisiteRecord
@@ -86,6 +89,44 @@ public class ProgramService : IProgramService
             Program = program,
             UnresolvedPrerequisites = unresolvedPrerequisites
         });
+    }
+
+    public async Task<PagedResult<ProgramSummaryResponse>> GetAllAsync(int page, int pageSize)
+    {
+        page = Math.Max(page, 1);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
+        var query = _context.Programs.AsNoTracking().OrderByDescending(p => p.CreatedAt);
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(p => new ProgramSummaryResponse
+            {
+                Id = p.Id,
+                Name = p.Name,
+                CreatedAt = p.CreatedAt
+            })
+            .ToListAsync();
+
+        return new PagedResult<ProgramSummaryResponse>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        };
+    }
+
+    public async Task<SimulateResponse?> SimulateAsync(string id, SimulateRequest request)
+    {
+        var program = await _loader.LoadProgramAsync(id);
+        if (program is null)
+            return null;
+
+        return _simulator.Simulate(program, request);
     }
 
     public static IEnumerable<Node> FlattenNodes(Node node)

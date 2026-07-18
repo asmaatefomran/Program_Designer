@@ -11,4 +11,8 @@ public interface IProgramService
     Task<CreateProgramResponse> CreateAsync(CreateProgramRequest request);
 
     Task<ValidationResponse?> ValidateAsync(string id);
+
+    Task<PagedResult<ProgramSummaryResponse>> GetAllAsync(int page, int pageSize);
+
+    Task<SimulateResponse?> SimulateAsync(string id, SimulateRequest request);
 }
