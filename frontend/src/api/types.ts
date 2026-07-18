@@ -74,3 +74,40 @@ export interface CreateProgramResponse {
   program: ProgramResponse;
   validation: ValidationResponse;
 }
+
+// ---- Programs list (GET /programs?page=&pageSize=) ----
+
+export interface ProgramSummaryResponse {
+  id: string;
+  name: string;
+  createdAt: string;
+}
+
+export interface PagedResult<T> {
+  items: T[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+// ---- Simulate (POST /programs/:id/simulate) ----
+
+export interface SimulateRequest {
+  choices: Record<string, string[]>;
+  completedStepTemplateIds: string[];
+}
+
+export interface NodeStateResponse {
+  id: string;
+  templateId: string;
+  name: string;
+  status: "complete" | "unlocked" | "blocked";
+  reason: string | null;
+}
+
+export interface SimulateResponse {
+  complete: NodeStateResponse[];
+  unlocked: NodeStateResponse[];
+  blocked: NodeStateResponse[];
+}
