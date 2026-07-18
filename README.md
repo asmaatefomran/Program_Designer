@@ -55,6 +55,37 @@ http://localhost:5000/swagger
 
 ---
 
+## Full stack (API + Postgres + frontend)
+
+```bash
+docker compose up --build
+```
+
+| Service | URL |
+|---|---|
+| Frontend | http://localhost:5173 |
+| API | http://localhost:5000 |
+| Swagger UI | http://localhost:5000/swagger |
+| Postgres | localhost:5432 |
+
+That's the whole stack, ready to use, in one command.
+
+## Frontend
+
+A Vite + React + TypeScript app (`frontend-new/`) for building, visualizing, and validating a program without touching curl or Swagger directly: a recursive tree editor on the left, a live ReactFlow diagram in the middle (containment edges solid, prerequisite edges dashed), and the validation result on the right. Errors/warnings highlight the exact node they're about, in both the editor and the diagram.
+
+Running it on its own (without Docker), against an API already running via `dotnet run` or the `backend` compose service:
+
+```bash
+cd frontend-new
+npm install
+npm run dev
+```
+
+Opens at `http://localhost:5173`, calling the API at `http://localhost:5000` by default (override with `VITE_API_BASE_URL`, see `.env.example`).
+
+---
+
 
 ## Running tests
 
@@ -152,6 +183,8 @@ Validation checks include:
 │   └── ProgramDesigner.Api
 ├── tests
 │   └── ProgramDesigner.Tests
+├── frontend-new
+│   └── src
 ├── docker-compose.yml
 ├── README.md
 └── .dockerignore
@@ -231,7 +264,9 @@ My responsibilities included:
 - Evaluating, modifying, and integrating AI-generated suggestions.
 - Debugging issues, making architectural decisions, and verifying the correctness of the final solution.
 
-All code included in the final project was reviewed, tested, and validated by me. I take full responsibility for the implementation and understand the design decisions and business logic throughout the codebase
+All code included in the final project was reviewed, tested, and validated by me. I take full responsibility for the implementation and understand the design decisions and business logic throughout the codebase.
+
+The frontend (`frontend/`) was built with Claude directly inside my existing Vite/React/Tailwind/shadcn scaffold, matching the API contract in `DTOs/`. 
 
 
 ---
