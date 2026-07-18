@@ -20,6 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IProgramBuilderService, ProgramBuilderService>();
 builder.Services.AddScoped<IValidationService, ValidationService>();
 builder.Services.AddScoped<IProgramLoaderService, ProgramLoaderService>();
+builder.Services.AddScoped<ISimulationService, SimulationService>();
 builder.Services.AddScoped<IProgramService, ProgramService>();
 
 // Swagger/OpenAPI
