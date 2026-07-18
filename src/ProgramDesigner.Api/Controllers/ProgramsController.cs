@@ -9,7 +9,7 @@ namespace ProgramDesigner.Api.Controllers;
 [Route("programs")]
 public class ProgramsController : ControllerBase
 {
-   private readonly IProgramService _programService;
+    private readonly IProgramService _programService;
 
     public ProgramsController(
         IProgramService programService)
@@ -22,6 +22,15 @@ public class ProgramsController : ControllerBase
     {
         var result =  await _programService.CreateAsync(request);
         return CreatedAtAction(nameof(GetById), new {id = result.Program.Id}, result);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<PagedResult<ProgramSummaryResponse>>> GetAll(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
+    {
+        var result = await _programService.GetAllAsync(page, pageSize);
+        return Ok(result);
     }
     
     
@@ -38,6 +47,13 @@ public class ProgramsController : ControllerBase
     {
         var validation = await  _programService.ValidateAsync(id);
         return validation is null ? NotFound() : Ok(validation);
+    }
+
+    [HttpPost("{id}/simulate")]
+    public async Task<ActionResult<SimulateResponse>> Simulate(string id, [FromBody] SimulateRequest request)
+    {
+        var result = await _programService.SimulateAsync(id, request);
+        return result is null ? NotFound() : Ok(result);
     }
     
 }
