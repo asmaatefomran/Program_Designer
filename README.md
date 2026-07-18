@@ -25,7 +25,6 @@ A learning program is a recursive tree of **groups** (containers with an `All`/`
     - [GET /programs/:id](#get-programsid)
     - [POST /programs/:id/validate](#post-programsidvalidate)
     - [POST /programs/:id/simulate](#post-programsidsimulate-bonus)
-- [Setting It Up From Scratch (Simpler / Manual Example)](#setting-it-up-from-scratch-simpler--manual-example)
 - [Validation Rules](#validation-rules)
 - [Testing](#testing)
 - [Frontend](#frontend)
@@ -66,8 +65,11 @@ To stop everything:
 ```bash
 docker compose down        # add -v to also wipe the postgres volume
 ```
+You should see all the Green words at the end, now the frontend + backend + database are running correctly.
+<img width="1380" height="552" alt="image" src="https://github.com/user-attachments/assets/dcc880ce-669e-4cb8-b2d6-42567946fd70" />
 
-> Prefer running the API without Docker? See [Setting It Up From Scratch](#setting-it-up-from-scratch-simpler--manual-example) below.
+
+
 
 ---
 
@@ -284,58 +286,7 @@ Given a participant's choices in each `Choice` group and which steps they've com
 }
 ```
 
----
 
-## Setting It Up From Scratch (Simpler / Manual Example)
-
-If you don't want Docker, here's the plain version:
-
-**1. Database** — any local Postgres works:
-
-```bash
-docker run --name pd-postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=programdesigner -p 5432:5432 -d postgres:16
-```
-
-**2. API:**
-
-```bash
-cd src/ProgramDesigner.Api
-dotnet ef database update      # applies migrations
-dotnet run
-```
-
-Runs at `http://localhost:5084` (or `5000`, see `Properties/launchSettings.json` / Docker mapping). Connection string lives in `appsettings.json` → `ConnectionStrings:DefaultConnection`, and CORS-allowed origins are under `Cors:AllowedOrigins`.
-
-**3. Frontend (optional):**
-
-```bash
-cd frontend
-npm install
-cp .env.example .env      # VITE_API_BASE_URL, defaults to http://localhost:5000
-npm run dev
-```
-
-Opens at `http://localhost:5173`.
-
-**4. Minimal request to test it's alive:**
-
-```bash
-curl -X POST http://localhost:5000/programs \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Hello World",
-    "rootGroup": {
-      "type": "group",
-      "templateId": "root",
-      "name": "Hello World",
-      "groupType": "All",
-      "requiredChoiceCount": 0,
-      "children": [
-        { "type": "step", "templateId": "s1", "name": "Only Step" }
-      ]
-    }
-  }'
-```
 
 ---
 
