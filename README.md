@@ -360,8 +360,3 @@ Given more time:
 - Structured logging and monitoring.
 - Performance work for very large program trees.
 
----
-
-## License
-
-This project is licensed under the MIT License.
