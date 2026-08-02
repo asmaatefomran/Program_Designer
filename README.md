@@ -6,11 +6,6 @@ A learning program is a recursive tree of **groups** (containers with an `All`/`
 
 ---
 
-## Demo Video
-
-📹 *Video walkthrough will be linked here:* **[[https://drive.google.com/drive/folders/1leq-KYHSimv00aIdqAuLFH0qhDLJfYIC?usp=sharing](https://drive.google.com/drive/folders/1leq-KYHSimv00aIdqAuLFH0qhDLJfYIC?usp=sharing)]**
-
----
 
 ## Table of Contents
 
@@ -205,7 +200,7 @@ Creates a program from a full nested tree and returns the created program **plus
 }
 ```
 
-> The full nested Computer Science scenario from the brief (with the `Major` choice group, `AI`/`IT`/`Programming` branches, and `Electives`) lives in `tests/ProgramDesigner.Tests/TestData/ComputerScienceScenario.cs` — copy its shape if you want the complete payload rather than the trimmed example above.
+> The full nested Computer Science scenario (with the `Major` choice group, `AI`/`IT`/`Programming` branches, and `Electives`) lives in `tests/ProgramDesigner.Tests/TestData/ComputerScienceScenario.cs` — copy its shape if you want the complete payload rather than the trimmed example above.
 
 ---
 
@@ -342,27 +337,6 @@ Covers, at minimum:
 
 ---
 
-## AI Usage
-
-This project was developed with extensive use of AI assistants, primarily ChatGPT, with additional assistance from Claude.
-
-AI was used for:
-- Discussing implementation approaches and alternative designs.
-- Generating implementation suggestions and code examples.
-- Reviewing code and suggesting refactoring opportunities.
-- Assisting with debugging, Docker configuration, Entity Framework issues, and documentation (including this README).
-
-My own responsibilities:
-- Defining the overall solution and driving the implementation.
-- Designing the domain model and API behavior.
-- Identifying and implementing the required validation rules.
-- Writing and expanding the test suite, including edge cases.
-- Evaluating, modifying, and integrating AI-generated suggestions.
-- Debugging, architectural decisions, and final verification of correctness.
-
-All code in the final project was reviewed, tested, and validated by me. I take full responsibility for the implementation and understand the design decisions and business logic throughout the codebase. The frontend (`frontend/`) was built with Claude directly inside an existing Vite/React/Tailwind/shadcn scaffold, matching the API contract in `DTOs/`.
-
----
 
 ## Design Decisions
 
@@ -390,4 +364,4 @@ Given more time:
 
 ## License
 
-Developed as part of a backend take-home assignment.
+This project is licensed under the MIT License.
